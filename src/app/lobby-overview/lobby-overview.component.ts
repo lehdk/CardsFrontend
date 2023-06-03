@@ -1,42 +1,54 @@
-import { Component } from '@angular/core';
-import { BackendService } from '../services/backend.service';
+import { Component, OnInit } from '@angular/core';
 import { GameLobby } from '../models/GameLobby.model';
 import { Router } from '@angular/router';
+import { SignalrLobbyService } from '../services/signalr-lobby.service';
+import { PlayerService } from '../services/player.service';
 
 @Component({
   selector: 'app-lobby-overview',
   templateUrl: './lobby-overview.component.html',
   styleUrls: ['./lobby-overview.component.scss']
 })
-export class LobbyOverviewComponent {
+export class LobbyOverviewComponent implements OnInit {
 
-    username: string = "";
-    
     lobbies: GameLobby[] = [];
 
-    constructor(private backend: BackendService, private router: Router) {
+    isLoaded: boolean = false;
+
+    constructor(private router: Router, private lobbySignalr: SignalrLobbyService, private playerService: PlayerService) {
+        this.refreshLobbies();
+
+        this.lobbySignalr.observableLobbies.subscribe((data: GameLobby[]) => {
+            this.lobbies = data;
+            this.isLoaded = true;
+        });
+    }
+
+    async ngOnInit() {
+        await this.lobbySignalr.setup();
+        
         this.refreshLobbies();
     }
     
     refreshLobbies(): void {
-        this.backend.getLobbies().subscribe((data: GameLobby[]) => {
-            this.lobbies = data;
-        });
+        this.lobbySignalr.refreshLobbies();
     }
 
-    createLobby(): void {
-        this.backend.createLobby().subscribe((guid: string) => {
-            const lobby: GameLobby = {
-                guid: guid
-            };
+    async createLobby(): Promise<void> {
+        const lobby = await this.lobbySignalr.createLobby();
 
-            this.lobbies.push(lobby)
-        });
+        if(!lobby) return;
+
+        this.joinLobby(lobby.guid);
     }
     
-    joinLobby(lobbyGuid: string): void {
-        if(this.username.length < 2) return;
-        
-        this.router.navigate(['lobby', lobbyGuid, this.username]);
-    }
+    async joinLobby(lobbyGuid: string): Promise<void> {
+        var player = this.playerService.loggedInAs.getValue();
+
+        const result = await this.lobbySignalr.joinLobby(lobbyGuid, player?.guid!);
+
+        if(!result) return;
+
+        this.router.navigate(['lobby', lobbyGuid, this.playerService.loggedInAs.getValue()!.username]);
+    }    
 }

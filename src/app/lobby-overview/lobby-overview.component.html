@@ -1,11 +1,18 @@
-<div>
+<div id="content">
     <h1>All open lobbies</h1>
-    <input type="text" name="username" id="username" [(ngModel)]="username"><br />
-    <button (click)="refreshLobbies()">Refresh</button><br />
-    <button (click)="createLobby()">Create Lobby</button>
-    <ul *ngFor="let lobby of lobbies">
-        <li>
-            <span>Id: {{lobby.guid}}</span><span> Players: {{lobby.players ?? "No players in the lobby"}}</span><button (click)="joinLobby(lobby.guid)">Join</button>
-        </li>
-    </ul>
+
+    <div *ngIf="!isLoaded; else loadedSection" class="lds-ripple"><div></div><div></div></div>
+
+    <ng-template #loadedSection>
+        <button (click)="refreshLobbies()">Refresh</button><br />
+        <button (click)="createLobby()">Create Lobby</button>
+        <div id="lobbyDiv">
+            <div id="lobbyDivItem" *ngFor="let lobby of lobbies">
+                <span>Id: {{lobby.guid}}</span>
+                <span> Players: {{(lobby.players ? lobby.players.length : "0")}}</span>
+                <span class="{{lobby.status | lobbyStatusToString | lowercase}}">{{lobby.status | lobbyStatusToString}}</span>
+                <button (click)="joinLobby(lobby.guid)" [disabled]="lobby.status != 0">Join</button>
+            </div>
+        </div>
+    </ng-template>
 </div>

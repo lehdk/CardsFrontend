@@ -1,0 +1,53 @@
+$itemWidth: 260px;
+$itemHeight: fit-content;
+
+#content {
+    text-align: center;
+}
+
+#lobbyDiv {
+    margin: 50px;
+    
+    display: grid;
+    row-gap: 10px;
+    column-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax($itemWidth, 1fr));
+}
+
+#lobbyDivItem {
+    background-color: #c3d5e6;
+    
+    padding: 10px;
+
+    border-radius: 6px;
+
+    width: $itemWidth;
+    height: $itemHeight;
+
+    display: flex;
+    
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+#lobbyDivItem button {
+    font-weight: bold;
+    font-size: 15px;
+    background-color: #45ac89;
+}
+
+.open {
+    font-weight: bolder;
+    color: GREEN;
+}
+
+.locked {
+    font-weight: bolder;
+    color: RED;
+}
+
+.started {
+    font-weight: bolder;
+    color: rgb(192, 126, 2);
+}
