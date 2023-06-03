@@ -1,0 +1,11 @@
+<div>
+    <h1>All open lobbies</h1>
+    <input type="text" name="username" id="username" [(ngModel)]="username"><br />
+    <button (click)="refreshLobbies()">Refresh</button><br />
+    <button (click)="createLobby()">Create Lobby</button>
+    <ul *ngFor="let lobby of lobbies">
+        <li>
+            <span>Id: {{lobby.guid}}</span><span> Players: {{lobby.players ?? "No players in the lobby"}}</span><button (click)="joinLobby(lobby.guid)">Join</button>
+        </li>
+    </ul>
+</div>
