@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameLobby } from '../models/GameLobby.model';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { Player } from '../models/player.model';
 
@@ -16,6 +16,8 @@ export class SignalrLobbyService {
     private hubConnection: HubConnection | null = null;
 
     public async setup() {
+
+        if(this.hubConnection && this.hubConnection.state !== HubConnectionState.Disconnected) return null;
         
         this.hubConnection = new HubConnectionBuilder()
             .withUrl("http://localhost:5138/Lobby")
