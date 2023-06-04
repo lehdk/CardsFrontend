@@ -9,6 +9,8 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { LobbyStatusToString } from './models/GameLobby.model';
+import { SignalrLobbyService } from './services/signalr-lobby.service';
+import { PlayerService } from './services/player.service';
 
 
 @NgModule({
@@ -26,7 +28,7 @@ imports: [
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [SignalrLobbyService, PlayerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -8,9 +8,12 @@ $itemHeight: fit-content;
 #lobbyDiv {
     margin: 50px;
     
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    
     row-gap: 10px;
     column-gap: 10px;
+    
     grid-template-columns: repeat(auto-fit, minmax($itemWidth, 1fr));
 }
 

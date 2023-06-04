@@ -1,41 +1,44 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Player } from '../models/player.model';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class PlayerService {
-
-    private static lsUserInfo: string = "userInfo"; 
-
+    public static lsUserInfo: string = "userInfo"; 
 
     loggedInAs: BehaviorSubject<Player | null> = new BehaviorSubject<Player | null>(null);
 
     private hubConnection: HubConnection | null = null;
 
-    constructor() { }
+    constructor() {
+    }
     
     public async setup() {
+
+        if(this.hubConnection && this.hubConnection.state !== HubConnectionState.Disconnected) return;
+
         this.hubConnection = new HubConnectionBuilder()
             .withUrl("http://localhost:5138/Player")
             .build();
 
         this.setupListeners();
-
+        
         return this.hubConnection
             .start()
             .then(() => console.log("Lobby hub connection started"))
             .catch(err => console.log(`Error while starting connection ${err}`)
         );
+
     }
 
     private setupListeners(): void {
     }
 
     async login(username: string | null = null): Promise<boolean> {
-        
         let player: Player | null = null;
 
         if(username === null) { // Try load from localstorage

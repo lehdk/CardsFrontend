@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
+import { PlayerService } from '../services/player.service';
 
 @Component({
   selector: 'app-lobby',
@@ -8,19 +9,29 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 })
 export class LobbyComponent implements OnInit {
 
-    lobbyId: string | null = null;
-    username: string | null = null;
+    lobbyId: string = "";
 
-    constructor(private router: Router, private route: ActivatedRoute) {
+    constructor(private router: Router, private route: ActivatedRoute, private playerService: PlayerService) { }
 
-    }
+    async ngOnInit() {
+        await this.playerService.setup();
+        await this.playerService.login();
+        const player = this.playerService.loggedInAs.getValue();
 
-    ngOnInit(): void {
-        this.route.paramMap.subscribe((params: ParamMap) => {
-            this.lobbyId = params.get("lobbyid");
-            this.username = params.get("username");
+        if(!player) {
+            this.router.navigate([""]);
+        }
+        
+        this.playerService.setup().then(() => {
+            this.route.params.subscribe((params: Params) => {         
+                const lobbyId = params["lobbyId"];
+                
+                if(!lobbyId || lobbyId !== player!.joinedLobbyGuid) {
+                    this.router.navigate([""]);
+                }
 
-            if(!this.lobbyId || !this.username) this.router.navigate(['']);
+                this.lobbyId = lobbyId;
+            });
         });
     }
 }

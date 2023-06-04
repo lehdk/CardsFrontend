@@ -43,12 +43,21 @@ export class LobbyOverviewComponent implements OnInit {
     }
     
     async joinLobby(lobbyGuid: string): Promise<void> {
-        var player = this.playerService.loggedInAs.getValue();
+        
+        const player = this.playerService.loggedInAs.getValue();
+        if(!player) return;
+        
+        try {
+            const result = await this.lobbySignalr.joinLobby(lobbyGuid, player?.guid!);
 
-        const result = await this.lobbySignalr.joinLobby(lobbyGuid, player?.guid!);
+            if(result) {
+                player.joinedLobbyGuid = lobbyGuid;
+                localStorage.setItem(PlayerService.lsUserInfo, JSON.stringify(player));
+            }
+        } catch(err) {
+            console.log(err);
+        }
 
-        if(!result) return;
-
-        this.router.navigate(['lobby', lobbyGuid, this.playerService.loggedInAs.getValue()!.username]);
+        this.router.navigate(["lobby", lobbyGuid]);
     }    
 }

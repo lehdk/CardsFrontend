@@ -65,6 +65,6 @@ export class SignalrLobbyService {
     public joinLobby(lobbyId: string, playerGuid: string): Promise<boolean> | null {
         if(!this.hubConnection) return null;
 
-        return this.hubConnection.invoke("JoinLobby", lobbyId, playerGuid);
+        return this.hubConnection.invoke<boolean>("JoinLobby", lobbyId, playerGuid);
     }
 }
