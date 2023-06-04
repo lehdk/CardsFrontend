@@ -11,9 +11,12 @@ export class SignalrLobbyService {
     
     public observableLobbies: BehaviorSubject<GameLobby[]> = new BehaviorSubject<GameLobby[]>([]);
 
+    public joinedLobby = new BehaviorSubject<GameLobby | null>(null);
+
     private hubConnection: HubConnection | null = null;
 
     public async setup() {
+        
         this.hubConnection = new HubConnectionBuilder()
             .withUrl("http://localhost:5138/Lobby")
             .build();
@@ -46,6 +49,16 @@ export class SignalrLobbyService {
 
             this.observableLobbies.next(lobbies);
         });
+
+        this.hubConnection.on("GroupLobbyPlayersChanged", (data: Player[]) => {
+            let lobby: GameLobby | null = this.joinedLobby.getValue();
+            
+            if(!lobby) return;
+
+            lobby.players = data;
+
+            this.joinedLobby.next(lobby);
+        });
     }
     
     public createLobby(): Promise<GameLobby> | null {
@@ -62,9 +75,33 @@ export class SignalrLobbyService {
         });
     }
     
-    public joinLobby(lobbyId: string, playerGuid: string): Promise<boolean> | null {
+    public async joinLobby(lobbyId: string, playerGuid: string) {
         if(!this.hubConnection) return null;
+        
+        const lobby: GameLobby | null = await this.hubConnection.invoke<GameLobby | null>("JoinLobby", lobbyId, playerGuid);
+    
+        if(lobby) {
+            this.joinedLobby.next(lobby);
+        }
 
-        return this.hubConnection.invoke<boolean>("JoinLobby", lobbyId, playerGuid);
+        return lobby;
+    }
+    
+    public async refreshJoinedLobby(lobbyId: string) {
+        if(!this.hubConnection) await this.setup();
+        
+        const lobby: GameLobby | null = await this.hubConnection!.invoke<GameLobby | null>("GetGameLobby", lobbyId);
+        
+        this.joinedLobby.next(lobby);
+    }
+    
+    public async leaveLobby(playerId: string) {
+        if(!this.hubConnection) await this.setup();
+
+        const lobby =  this.joinedLobby.getValue();
+        if(!lobby) return;
+
+        await this.hubConnection!.send("LeaveLobby", lobby.guid, playerId);
+        this.joinedLobby.next(null);
     }
 }

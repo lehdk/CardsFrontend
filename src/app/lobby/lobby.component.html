@@ -1,4 +1,13 @@
-<div *ngIf="lobbyId">
-    <span>Lobby: {{lobbyId}}</span><br />
+<div id="content" *ngIf="gameLobby; else loading">
+    <span>Lobby: {{gameLobby.guid}}</span><br />
+    <div>
+        <h2>Players in the lobby</h2>
+        <ul *ngFor="let player of gameLobby.players">
+            <li>{{player.username}}</li>
+        </ul>
+    </div>
+    <button (click)="leaveLobby()">Leave Lobby</button>
 </div>
-<div class="lds-ripple"><div></div><div></div></div>
+<ng-template #loading>
+    <div class="lds-ripple"><div></div><div></div></div>
+</ng-template>
