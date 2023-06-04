@@ -2,8 +2,8 @@
     <span>Lobby: {{gameLobby.guid}}</span><br />
     <div>
         <h2>Players in the lobby</h2>
-        <ul *ngFor="let player of gameLobby.players">
-            <li>{{player.username}}</li>
+        <ul id="playersList">
+            <li *ngFor="let player of gameLobby.players">{{player.username}}</li>
         </ul>
     </div>
     <button (click)="leaveLobby()">Leave Lobby</button>

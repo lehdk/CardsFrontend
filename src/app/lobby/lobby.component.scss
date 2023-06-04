@@ -4,3 +4,23 @@ button {
     font-size: 16px;
     padding: 5px 10px;
 }
+
+#playersList {
+    width: fit-content;
+    margin: 10px;
+    padding: 25px;
+
+    background-color: #c3d5e6;
+
+    border-radius: 5px;
+}
+
+#playersList li:first-child {
+    font-weight: bolder;
+}
+
+#playersList li:first-child::after {
+    font-weight: normal;
+    font-style: italic;
+    content: "  (leader)";
+}
