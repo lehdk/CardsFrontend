@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
             this.isReady = result === HubConnectionState.Connected;
         }
 
-        
+        await this.tryLogin();
     }
 
     private async tryLogin() {

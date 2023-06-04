@@ -1,8 +1,10 @@
 <div id="content">
     <h1>All open lobbies</h1>
 
+    <h4>Logged in as <span>{{playerService.loggedInAs.getValue()?.username}}</span></h4>
+    
     <div *ngIf="!isLoaded; else loadedSection" class="lds-ripple"><div></div><div></div></div>
-
+    
     <ng-template #loadedSection>
         <button (click)="refreshLobbies()">Refresh</button><br />
         <button (click)="createLobby()">Create Lobby</button>

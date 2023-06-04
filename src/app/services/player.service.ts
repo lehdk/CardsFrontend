@@ -33,6 +33,8 @@ export class PlayerService {
             .catch(err => console.log(`Error while starting connection ${err}`)
         );
 
+        await this.login();
+
         return this.hubConnection.state;
     }
 

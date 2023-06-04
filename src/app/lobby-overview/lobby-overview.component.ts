@@ -15,17 +15,19 @@ export class LobbyOverviewComponent implements OnInit {
 
     isLoaded: boolean = false;
 
-    constructor(private router: Router, private lobbySignalr: SignalrLobbyService, private playerService: PlayerService) {
+    constructor(private router: Router, private lobbySignalr: SignalrLobbyService, public playerService: PlayerService) {
+    }
+    
+    async ngOnInit() {
+        await this.playerService.setup();
+        await this.lobbySignalr.setup();
+        
         this.refreshLobbies();
-
+    
         this.lobbySignalr.observableLobbies.subscribe((data: GameLobby[]) => {
             this.lobbies = data;
             this.isLoaded = true;
         });
-    }
-
-    async ngOnInit() {
-        await this.lobbySignalr.setup();
         
         this.refreshLobbies();
     }
