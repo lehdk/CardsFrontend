@@ -1,8 +1,14 @@
 <main>
-    <h1>Please enter a username</h1>
-    <form [formGroup]="userInfoFormGroup" (ngSubmit)="login()">
-        <label for="username">Username: </label>
-        <input id="username" type="text" formControlName="username"/><br />
-        <button type="submit">Login</button>
-    </form>
+    <div *ngIf="!isReady else ready">
+        <h1>Connecting to server</h1>
+        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </div>
+    <ng-template #ready>
+        <h1>Please enter a username</h1>
+        <form [formGroup]="userInfoFormGroup" (ngSubmit)="login()">
+            <label for="username">Username: </label>
+            <input id="username" type="text" formControlName="username"/><br />
+            <button type="submit">Login</button>
+        </form>
+    </ng-template>
 </main>

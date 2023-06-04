@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Player } from '../models/player.model';
 import { Router } from '@angular/router';
 import { PlayerService } from '../services/player.service';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +10,8 @@ import { PlayerService } from '../services/player.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+
+    isReady: boolean = false;
     
     userInfoFormGroup: FormGroup = new FormGroup({
         username: new FormControl('')
@@ -18,8 +20,17 @@ export class LoginComponent implements OnInit {
     constructor(private router: Router, private playerService: PlayerService) { }
 
     async ngOnInit(): Promise<void> {
-        await this.playerService.setup();
+        while(!this.isReady) {
+            const result = await this.playerService.setup();
+            
+            if(!result) continue;
+            this.isReady = result === HubConnectionState.Connected;
+        }
 
+        
+    }
+
+    private async tryLogin() {
         const wasLoggedIn: boolean = await this.playerService.login();
         
         if(wasLoggedIn) {

@@ -17,9 +17,9 @@ export class PlayerService {
     constructor() {
     }
     
-    public async setup() {
+    public async setup(): Promise<HubConnectionState | null> {
 
-        if(this.hubConnection && this.hubConnection.state !== HubConnectionState.Disconnected) return;
+        if(this.hubConnection && this.hubConnection.state !== HubConnectionState.Disconnected) return null;
 
         this.hubConnection = new HubConnectionBuilder()
             .withUrl("http://localhost:5138/Player")
@@ -27,12 +27,13 @@ export class PlayerService {
 
         this.setupListeners();
         
-        return this.hubConnection
+        await this.hubConnection
             .start()
             .then(() => console.log("Lobby hub connection started"))
             .catch(err => console.log(`Error while starting connection ${err}`)
         );
 
+        return this.hubConnection.state;
     }
 
     private setupListeners(): void {
