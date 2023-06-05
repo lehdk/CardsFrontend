@@ -286,9 +286,29 @@
   text-indent: -0.2em;
 }
 
-.card[selected=true] {
+.cardWrapper[selected=true] {
     $distance: 2em;
 
     margin-top: -$distance;
     margin-bottom: $distance;
+}
+
+.cardWrapper {
+    background-color: rgb(211, 214, 216);
+    --width: 10em;
+    --height: calc(1.4 * var(--width));
+    width: var(--width);
+    height: var(--height);
+    border-radius: 0.5em;
+    box-shadow: 0.2em 0.2em 1.2em rgba(0, 0, 0, 0.1);
+    position: relative;
+  
+    color: var(--color);
+  
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.card[facingUp=false] {
+    background-color: #000;
 }

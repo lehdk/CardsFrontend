@@ -19,4 +19,11 @@ export class CardComponent {
 
         this.card.selected = !this.card.selected;
     }
+
+    turnCard(event: MouseEvent) {
+        event.preventDefault();
+        if(!this.card) return;
+
+        this.card.facingUp = !this.card.facingUp;
+    }
 }

@@ -57,7 +57,7 @@ export class Card {
     constructor(public suite: Suites, public rank: Ranks) { }
 
     public selected: boolean = false;
-    
+    public facingUp: boolean = true;
 }
 
 export class Deck {
