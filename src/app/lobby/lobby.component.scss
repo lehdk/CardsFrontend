@@ -3,6 +3,11 @@ button {
     font-weight: bolder;
     font-size: 16px;
     padding: 5px 10px;
+    margin-bottom: 8px;
+}
+
+.lockUnlock {
+    background-color: rgb(255, 93, 35);
 }
 
 #playersList {
@@ -23,4 +28,9 @@ button {
     font-weight: normal;
     font-style: italic;
     content: "  (leader)";
+}
+
+.self:hover {
+    cursor: pointer;
+    text-decoration: line-through;
 }

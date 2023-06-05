@@ -31,10 +31,14 @@ export class LoginComponent implements OnInit {
     }
 
     private async tryLogin() {
-        const wasLoggedIn: boolean = await this.playerService.login();
-        
-        if(wasLoggedIn) {
-            this.router.navigate(["lobbies"]);
+        try {
+            const wasLoggedIn: boolean = await this.playerService.login();
+            
+            if(wasLoggedIn) {
+                this.router.navigate(["lobbies"]);
+            }
+        } catch(err) {
+            console.log("Could not login", err);
         }
     }
 

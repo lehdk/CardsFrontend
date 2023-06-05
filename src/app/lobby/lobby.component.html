@@ -3,9 +3,18 @@
     <div>
         <h2>Players in the lobby</h2>
         <ul id="playersList">
-            <li *ngFor="let player of gameLobby.players">{{player.username}}</li>
+            <li *ngFor="let player of gameLobby.players" class="{{(playerService.loggedInAs.getValue()?.guid !== player.guid) ? 'notSelf': 'self'}}" (click)="kickPlayer(player)">{{player.username}}</li>
         </ul>
     </div>
+    <div *ngIf="playerService.loggedInAs.getValue()?.guid === gameLobby.players![0].guid">
+        <div *ngIf="gameLobby.status === LobbyStatus.Open; else locked">
+            <button class="lockUnlock" (click)="lockToggle()">Lock Lobby</button><br />
+        </div>
+        <ng-template #locked>
+            <button class="lockUnlock" (click)="lockToggle()">Unlock Lobby</button><br />
+        </ng-template>
+    </div>
+
     <button (click)="leaveLobby()">Leave Lobby</button>
 </div>
 <ng-template #loading>

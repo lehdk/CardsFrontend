@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PlayerService } from '../services/player.service';
-import { GameLobby } from '../models/GameLobby.model';
+import { GameLobby, LobbyStatus } from '../models/GameLobby.model';
 import { SignalrLobbyService } from '../services/signalr-lobby.service';
+import { Player } from '../models/player.model';
 
 @Component({
   selector: 'app-lobby',
@@ -11,9 +12,11 @@ import { SignalrLobbyService } from '../services/signalr-lobby.service';
 })
 export class LobbyComponent implements OnInit {
 
+    public LobbyStatus = LobbyStatus;
+
     gameLobby: GameLobby | null = null;
 
-    constructor(private router: Router, private route: ActivatedRoute, private playerService: PlayerService, private lobbyService: SignalrLobbyService) { }
+    constructor(private router: Router, private route: ActivatedRoute, public playerService: PlayerService, private lobbyService: SignalrLobbyService) { }
 
     async ngOnInit() {
         await this.playerService.setup();
@@ -49,5 +52,32 @@ export class LobbyComponent implements OnInit {
         }
 
         this.router.navigate(["lobbies"]);
+    }
+
+    kickPlayer(player: Player): void {
+        const loggedInAs = this.playerService.loggedInAs.getValue();
+        if(!loggedInAs) return;
+
+        if(player.guid !== loggedInAs.guid) return; // Can not kick self
+
+        console.log("Kick");
+    }
+
+    async lockToggle(): Promise<void> {
+        
+        //TODO: Make this call the backend
+
+        if(!this.gameLobby) return;
+
+        switch(this.gameLobby.status) {
+            case LobbyStatus.Open: {
+                this.gameLobby.status = LobbyStatus.Locked;
+                break;
+            }
+            case LobbyStatus.Locked: {
+                this.gameLobby.status = LobbyStatus.Open;
+                break;
+            }
+        }
     }
 }

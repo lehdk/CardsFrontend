@@ -42,31 +42,37 @@ export class PlayerService {
     }
 
     async login(username: string | null = null): Promise<boolean> {
-        let player: Player | null = null;
+        try {
+            let player: Player | null = null;
 
-        if(username === null) { // Try load from localstorage
-            const lsResult = localStorage.getItem(PlayerService.lsUserInfo);
-            if(!lsResult) return false;
+            if(username === null) { // Try load from localstorage
+                const lsResult = localStorage.getItem(PlayerService.lsUserInfo);
+                if(!lsResult) return false;
 
-            try {
-                let parsed: Player = JSON.parse(lsResult);
+                try {
+                    let parsed: Player = JSON.parse(lsResult);
 
-                if(!parsed) throw new Error("No data");
+                    if(!parsed) throw new Error("No data");
 
-                player = parsed;
-            } catch {
-                localStorage.removeItem(PlayerService.lsUserInfo);
-                return false;
+                    player = parsed;
+                } catch {
+                    localStorage.removeItem(PlayerService.lsUserInfo);
+                    return false;
+                }
             }
+            
+            let backendResult = await this.hubConnection!.invoke<Player | null>("LoginOrRegister", (username ? username : player!.username), (player ? player.guid : null));
+
+            if(backendResult === null) return false;
+
+            localStorage.setItem(PlayerService.lsUserInfo, JSON.stringify(backendResult));
+            this.loggedInAs.next(backendResult);
+
+            return true;
+    
+        } catch(err) {
+            console.log("Could not login!", err);
+            return false;
         }
-        
-        let backendResult = await this.hubConnection!.invoke<Player | null>("LoginOrRegister", (username ? username : player!.username), (player ? player.guid : null));
-
-        if(backendResult === null) return false;
-
-        localStorage.setItem(PlayerService.lsUserInfo, JSON.stringify(backendResult));
-        this.loggedInAs.next(backendResult);
-
-        return true;
     }
 }
