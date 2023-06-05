@@ -1,0 +1,13 @@
+<div id="deckWrapper">
+    <div id="dickBackground"></div>
+        
+    <div cdkDropList cdkDropListOrientation="horizontal" class="deck" (cdkDropListDropped)="drop($event)">
+        <app-card class="deck-card" *ngFor="let card of deck.cards" cdkDrag [card]=card></app-card>
+    </div>
+</div>
+
+<div id="controls">
+    <button id="shuffle" (click)="shuffle()">Shuffle</button>
+    <button (click)="selectAll(true)">Select all</button>
+    <button (click)="selectAll(false)">Unselect all</button>
+</div>

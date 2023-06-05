@@ -11,6 +11,11 @@ import { LoginComponent } from './login/login.component';
 import { LobbyStatusToString } from './models/GameLobby.model';
 import { SignalrLobbyService } from './services/signalr-lobby.service';
 import { PlayerService } from './services/player.service';
+import { CardGameComponent } from './card-game/card-game.component';
+import { CardToString, RankToString, SuiteToString } from './models/card.models';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { CardComponent } from './card/card.component';
 
 
 @NgModule({
@@ -19,14 +24,22 @@ import { PlayerService } from './services/player.service';
     LobbyOverviewComponent,
     LobbyComponent,
     LoginComponent,
-    LobbyStatusToString
+    LobbyStatusToString,
+    SuiteToString,
+    RankToString,
+    CardToString,
+    CardGameComponent,
+    CardComponent
 ],
 imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    CdkDrag,
+    CdkDropList
   ],
   providers: [SignalrLobbyService, PlayerService],
   bootstrap: [AppComponent]

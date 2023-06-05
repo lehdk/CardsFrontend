@@ -1,0 +1,69 @@
+#controls {
+    display: flex;
+    gap: 1em;
+
+    margin: 1em;
+}
+
+#controls button {
+    font-size: larger;
+    padding: 0.5em 1em;
+}
+
+#dickBackground {
+    position: absolute;
+    background-color: white;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 25%;
+}
+
+#deckWrapper {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.deck {
+    width: fit-content;
+    max-width: 100%;
+    min-height: 60px;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+.deck-card {
+    padding: 20px 10px;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    cursor: move;
+    font-size: 14px;
+    flex-basis: 0;
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.deck-card:last-child {
+    border: none;
+}
+
+.deck.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
