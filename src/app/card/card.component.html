@@ -1,1 +1,7 @@
-<div (click)="toggleSelect()" class="card" attr.suit="{{card?.suite | suiteToString | lowercase }}" attr.card="{{ card?.rank }}" attr.selected="{{card?.selected}}"></div>
+<div class="cardWrapper" (click)="toggleSelect()" (contextmenu)="turnCard($event)" attr.selected="{{card?.selected}}">
+    <div class="card"
+        attr.suit="{{card?.suite | suiteToString | lowercase }}"
+        attr.card="{{ card?.rank }}"
+        [style]="{'display': (card?.facingUp) ? '' : 'none'}">
+    </div>
+</div>
